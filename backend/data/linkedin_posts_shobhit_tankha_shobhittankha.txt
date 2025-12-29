@@ -1,0 +1,636 @@
+LinkedIn Posts from: https://in.linkedin.com/in/shobhittankha
+Extracted: 2025-12-29 10:06:23
+Total posts: 20
+================================================================================
+
+Post 1
+--------------------------------------------------------------------------------
+Text:
+Who am I? Who are you?
+
+At the deepest layer, not the labels, not the roles, not the noise. We are expressions of the One.
+
+Across traditions, languages, and centuries, that One has been named many things. One of the most precise names is
+. Truth. Eternity. Bliss. Not poetry for escape, but a philosophical claim about reality itself.
+
+When you remember God sincerely, notice what actually happens. In a church, absorbed in prayer, hatred does not survive. In a mosque, bowing in remembrance, extremism does not arise. In a temple, hands folded in devotion, radical impulses lose their grip.
+
+In meditation, puja, jaap, or bhajan, the mind may wander, but even its wandering unfolds inside a quiet, steady awareness. The distractions keep playing, like scenes in a movie, but you are no longer trapped inside the screen. You know you are watching.
+
+When you look inward, you tap into reality.
+When you look outward, you tap into conditioning.
+
+It is a glimpse of what you already are when the clutter steps aside.
+
+That moment of clarity, love, and stillness does not make you divine. It reveals that you always were.
+
+Tat Tvam Asi.
+You were That.
+You are That.
+
+And you will never be anything else.
+
+================================================================================
+
+Post 2
+--------------------------------------------------------------------------------
+Text:
+This is one of those truths that feels obvious only after you've stared at it long enough or been sucker-punched by computer science or physics, yet people still manage to trip over it with impressive consistency.
+
+Infinite memory does not imply zero hallucination. Not even close.
+
+Memory is storage. Hallucination is reasoning failure under uncertainty. Those are orthogonal axes. You can max out one and still faceplant on the other.
+
+================================================================================
+
+Post 3
+--------------------------------------------------------------------------------
+Text:
+I don't like it. I don't fully endorse probabilistic AI. 👈🏻
+
+Long term, we need cognitive or neurosymbolic AI at scale. Short term, we still have to work with what exists.
+
+Here is my straight talk: You don't leverage probabilistic models by trusting outputs. You leverage them by trusting processes.
+
+These systems are idea accelerators, not answer oracles. Great at generating plausible candidates. Terrible at guarantees.
+
+So the winning move is simple:
+
+Enforce correctness downstream. Never hope for it upstream.
+
+5 principles that actually work:
+
+1. Trust processes, not outputs
+
+You don't review every output line by line. You design constraints that make wrong answers expensive for the model and cheap for you to catch. Ask for reasoning, not conclusions. Force assumptions into the open. Request multiple independent perspectives. Agreement across samples is not truth, but it is a useful signal. This is triangulation.
+
+2. Use AI where variance is an asset
+
+Probabilistic systems shine when you want many candidate ideas, broad coverage of a search space, or an escape from local minima in thinking. They fail when one correct answer matters, when stakes are asymmetric, or when errors compound silently. Use them for ideation, drafting, exploration, refactoring, and test generation. Never in final authority roles. Think junior analyst who never sleeps and sometimes confidently lies.
+
+3. Externalize truth
+
+The model should never be the final source of truth. Ever. Anchor outputs to formal systems like math, code, and type checkers. Ground them in databases, APIs, and real-world signals. Insert human judgment at decision choke points. In systems language, AI operates inside a control loop, not as the loop.
+
+4. Treat probability as a dial
+
+Randomness is not a bug. It is a control surface. Sampling temperature, prompting structure, and redundancy let you tune behavior intentionally. Low variance for consistency. High variance for discovery. Multiple samples for uncertainty estimation. This is operational discipline, not magic.
+
+5. Measure reliability empirically, not philosophically
+
+Stop arguing about whether AI is intelligent. Start tracking where it fails. Measure error rates by task type. Identify failure modes. Watch for drift over time. Once you know where it breaks, you fence those areas off. This is how aviation, finance, and medicine work. No romance. Just guardrails.
+
+Bottom line: Probabilistic models are not minds. They are leverage.
+
+Leverage doesn't need wisdom. It needs constraints, verification, and discipline.
+
+That playbook is ancient. Still undefeated.
+
+================================================================================
+
+Post 4
+--------------------------------------------------------------------------------
+Text:
+Thanks to GenAI, Tom is now a walking LinkedIn (or social media) hallucination.
+
+He is simultaneously a biologist, chemist, physicist, mathematician, engineer, economist, startup guru, corporate leader, sales ninja, marketing wizard, industry veteran, and 'been there, done that' expert.
+Every problem you mention? Tom has already solved it. Twice. In a previous life. At scale.
+
+Tom doesn't need years of practice. He doesn't need scars, failures, or long nights of getting it wrong.
+
+He has prompts.
+
+There is exactly one non-negotiable constraint: You must never meet Tom in person. ❌️
+
+Because face-to-face, there's no autocomplete for thinking. No copy-paste confidence. No tab to quietly close when a follow-up question lands.
+
+• Online, Tom builds empires with bullet points.
+
+• Offline, he struggles to explain the first principle behind his own hot take.
+
+As long as the conversation stays digital, Tom is omniscient. The moment reality logs in, his expertise logs out.
+
+GenAI didn't create fake experts. It just gave them a microphone, a spotlight, and the courage to talk nonstop.
+
+================================================================================
+
+Post 5
+--------------------------------------------------------------------------------
+Text:
+Humanity looked at a perfectly good planet with gravity, oxygen, technicians who drink chai at 3 AM, and said: nah. Let us yeet the data center into space.
+
+This is the current strategy. Take racks that already overheat in summers, strap them to rockets that explode for fun, and trust statistical AI that still hallucinates confidently about basic arithmetic. Bold. Visionary. Deeply unserious.
+
+Picture the pitch deck.
+Slide 1: Latency but make it cosmic.
+Slide 2: Solar flares are just spicy electrons.
+Slide 3: The model says it will work with minimized hallucinations.
+
+Probably. Based on correlations it learned from cat photos andarguments. The same AI that tells you to glue pizza to the ceiling to fix Wi-Fi. Now promoted to Chief Astronaut of Infrastructure.
+
+On Earth, servers fail because someone tripped on a cable or the AC died. In space, servers fail because the Sun sneezed. Also because radiation flips bits like it is playing roulette. Also because there is no technician to kick the rack and whisper ancient curses that somehow fix everything. Space has no janitors, no spare screws, no jugaad. Space does not care about your SLA.
+
+We have not even solved the basics here. Energy grids wobble. Cooling is a medieval art. Supply chains run on vibes. Security patches arrive late. And the AI steering this ship is a probability blender. It does not know truth. It knows what sounds truthy. We are outsourcing physics to autocomplete and calling it innovation.
+
+There is something poetically backward about it. Instead of making software robust, we make hardware unreachable. Instead of proving the math, we launch it. Instead of fixing bugs, we add altitude. This is escapism with a budget.
+
+Also, let us be honest. The real reason is not science. It is vibes. Space sounds premium. Space looks good on a banner. "To boldly go where no server has gone before" is marketing poetry for "we skipped the hard part."
+
+Sort the tech here first. Prove the models. Make them reliable, interpretable, boring. Boring is good. Boring means it works. Build systems that survive heat, idiots, and bad assumptions. Then, maybe, when the AI stops gaslighting us and the statistics grow up into actual understanding, we can talk about orbit.
+
+Until then, putting data centers in space is like moving your messy room to the Moon so your parents cannot see it. The mess is still a mess. It just has better views.
+
+================================================================================
+
+Post 6
+--------------------------------------------------------------------------------
+Text:
+𝗦𝗶𝗺𝘂𝗹𝗮𝘁𝗶𝗻𝗴 𝗽𝗮𝘀𝘁 𝗲𝘃𝗲𝗻𝘁𝘀 𝗶𝘀 𝗺𝘂𝗰𝗵 𝗺𝗼𝗿𝗲 𝗵𝗲𝗹𝗽𝗳𝘂𝗹 𝘁𝗵𝗮𝗻 𝘀𝗶𝗺𝘂𝗹𝗮𝘁𝗶𝗻𝗴 𝗳𝘂𝘁𝘂𝗿𝗲 𝗼𝘂𝘁𝗰𝗼𝗺𝗲𝘀:
+
+I'd like to tell about a young engineer who built her first
+system to predict traffic jams in her city. She fed the model endless data about weather, time, and road patterns, hoping it would forecast exactly when traffic would snarl up. The results were a mess. The system was guessing far too much. Every day brought new variables it couldn't see coming.
+
+Frustrated, she changed her approach. Instead of trying to predict the future, she made the AI re-experience the past. She fed it years of traffic data and asked it not to predict but to reconstruct what had already happened. The model began to understand recurring causes: how sudden rain or a cricket match could ripple through the city's arteries. It wasn't fortune-telling anymore; it was pattern-recognition powered by memory.
+
+That's when she noticed something else. The more connections the model made, the better it got. Each new data point acted like a Velcro hook, catching onto others and forming a tighter web of meaning. The AI wasn't storing isolated facts but building relationships between them. A traffic jam near the stadium linked to fan behaviour, which linked to weather forecasts, which linked to public transport usage. The richer the network, the smarter it became.
+
+Humans learn the same way. We are masters at reconstructing our past and attaching emotions, stories, and sensations to what we remember. These "hooks" make memories stick. We do not survive by predicting the future but by retelling the past until its lessons become instinct.
+
+AI, in its own way, mirrors that process. It learns not by seeing ahead but by looking back: replaying, connecting, and refining. Intelligence, whether human or artificial, grows from reflection, not prediction. What we remember, and how many threads we weave around it, decides how clearly we see the road ahead.
+
+P.S. Many years ago, researchers atran an experiment to understand how mental simulation affects problem-solving. You may wish to learn more here:
+
+================================================================================
+
+Post 7
+--------------------------------------------------------------------------------
+Text:
+𝗠𝗮𝗿𝗸𝗲𝘁𝗲𝗿𝘀 𝗼𝗳𝘁𝗲𝗻 𝗺𝗮𝗸𝗲 𝗼𝗻𝗲 𝘀𝘂𝗯𝘁𝗹𝗲 𝗺𝗶𝘀𝘁𝗮𝗸𝗲:
+
+They take data-driven insights meant for internal use… and start serving them to customers.
+
+And this could get worse with AI. When everything is optimized, brands risk talking like machines that measure rather than humans who move.
+
+That's a problem.
+
+Because the moment you show numbers, you shift your audience's brain. You pull them out of emotion and drop them into analysis.
+
+Statistics trigger the neocortex, not the limbic system. They make people think instead of feel.
+
+And feelings are what drive buying decisions.
+
+So here's a simple rule:
+→ Use data to decide what to say.
+→ Don't use data to say what you decided.
+
+Let the numbers guide your story, but let the story move the human.
+
+================================================================================
+
+Post 8
+--------------------------------------------------------------------------------
+Text:
+You can understand AI better if you visualize computation as a 2-player game between an Algorithm (AI) and Nature (World):
+
+The Algorithm isn't just code. It's any system trying to decode reality itself. Every learning system, every neural network, is an algorithm locked in a game with nature.
+
+AI proposes models and predictions. Nature pushes back with data and penalties for mistakes. AI adjusts to minimize that penalty. This back-and-forth? That's what training a model actually is.
+
+1. The loss function is Nature's punishment.
+2. Optimization? The Algorithm's move.
+3. When training stops improving, that's equilibrium.
+
+• Equilibrium = Learning
+
+Equilibrium means neither side can get better anymore.
+
+1. AI can't reduce loss without overfitting.
+2. Nature's dataset is finite. No new info to throw in.
+
+So a trained model is a temporary truce between knowledge and uncertainty.
+
+Good vs bad generalization? How deep that equilibrium is. Shallow equilibria topple the moment reality shifts. Deep ones hold strong.
+
+When billions of parameters or countless agents learn together, their updates don't happen in isolation. They influence one another like particles in a field.
+
+This is how beliefs and value functions evolve statistically. This isn't abstract. This is exactly how gradient descent behaves at scale.
+
+AI learning is a swarm of tiny computations chasing equilibrium collectively.
+
+Think of AI training like exploring an energy landscape.
+
+• Simple problems are smooth hills, easy to climb.
+• Hard problems are rugged mountains filled with traps.
+
+Training a large model is like trekking that terrain. How fast you climb and how well you generalize depends on the landscape's shape.
+
+That's why stochastic optimization (adding noise) is crucial. It shakes the system out of bad equilibria, mimicking Nature's randomness.
+
+If P = NP, AI could find perfect models as easily as it verifies them. But AI doesn't work like that. It relies on randomness, massive data, and human feedback. We live in a P ≠ NP universe. Learning demands exploration, not just computation.
+
+That's why AI feels intelligent to us: It's struggling to reach equilibria that pure logic can't solve alone.
+
+================================================================================
+
+Post 9
+--------------------------------------------------------------------------------
+Text:
+Apple might just be the smartest one in the room:
+
+While everyone else went all-in on massive cloud AI infrastructure and GenAI/Agentic AI hype, Apple played it differently. Quietly. It built its own AI capabilities into the hardware and software it already controls. No flashy model names, no AI arms race marketing.
+
+And while others chase the next API subscription or GPU cluster, Apple has been strengthening its moat: device-based AI, privacy-first architecture, and tight vertical integration.
+
+So when (not if) the AI bubble deflates, the real hit will fall on AI model vendors and tool providers whose valuations are tied to speculative hype. Apple might feel the market tremor, sure, but it won't be standing on the fault line.
+
+Sometimes, restraint is the boldest strategy.
+
+================================================================================
+
+Post 10
+--------------------------------------------------------------------------------
+Text:
+A business chatbot was built via n8n recently. Everything looked straightforward. The image represents a demo workflow.
+
+Message trigger, AI Agent orchestration, memory, data retrieval: all clean and predictable. Then came the step called "Choose your LLM Model."
+
+That is where the real uncertainty starts.
+
+Every other part of the system behaves deterministically. The data either flows or it doesn't. The memory either connects or it fails. But once the workflow touches the model, logic gives way to probability.
+
+You can optimize prompts, add guardrails (Eg: Temperature, Top-K, Top-P), connect external data, even fine-tune responses. It helps, but it never eliminates the core issue: hallucination.
+
+Hallucination is just how LLMs work. They are not retrieving truth. They are predicting the next token that seems plausible.
+
+Most of the time, the model performs well. It pulls information accurately from PDF documents stored in arepository. The system feels stable, reliable, even predictable. But once the documents get complex (multi-layered tables, mixed text formats, nested references), and the bot starts scaling, hallucination sneaks in.
+
+The model begins to infer instead of extract. It fills gaps with what it "thinks" belongs there despite constraints.
+
+Many people package "Agentic AI" as if it is a new kind of intelligence. In reality, it is still an orchestration layer around the same probabilistic core.
+
+Every agent, every tool, every memory system ultimately depends on how the model interprets uncertainty. If you are building with LLMs, remember this: you can control everything except the model's imagination.
+
+And that imagination is both the magic and the menace of GenAI.
+
+================================================================================
+
+Post 11
+--------------------------------------------------------------------------------
+Text:
+I am done with the flood of pseudo intellectuals on LinkedIn.
+The latest trick is pathetic. They copy your post, dump it into ChatGPT, and tell it to criticize. Then they parade the output as if it were their own brilliance.
+
+You can spot the lazy ones. Wrong apostrophes. Overcooked punctuation. Long-winded replies fired within minutes. From here on, anyone outsourcing their thinking to AI is getting blocked. No discussion. No 2nd chances.
+
+The clever ones are harder. They scrub the AI slop, delay their responses, and pretend to be original. Which means the only way left to test actual intelligence is through direct interaction. Until then, I treat
+as
+.
+
+================================================================================
+
+Post 12
+--------------------------------------------------------------------------------
+Text:
+🧘🏻‍♂️ Uncertainty: Not Just in Our Minds, Partly in Reality Itself
+
+🔸️Deterministic Systems Follow:
+
+S(t+1) = f(S(t))
+
+Everything evolves according to fixed rules. Even here, uncertainty emerges because our brains have limits. Finite memory (M) and processing power (C) mean we cannot track every tiny detail.
+
+Chaotic systems magnify this. Tiny differences explode over time:
+
+ΔS(t) ≈ ΔS(0) × e^(λt)
+
+Even the smallest unknown becomes a big deal.
+
+Information theory explains this observer-limited uncertainty:
+
+H(observer) = −∑ P × log P
+
+If we could measure everything perfectly, H(observer) = 0. But we cannot, so we perceive randomness.
+
+Kolmogorov complexity shows why deterministic systems appear complex:
+
+K(S(t)) > C
+
+Even simple rules can produce behavior that feels unpredictable.
+
+So far, this is epistemic uncertainty, uncertainty in our knowledge, not in reality itself.
+
+🔸️Enter Free Will
+
+Some interpretations of quantum mechanics suggest conscious observation might collapse possibilities into reality. We do not need to go deep into quantum physics to see the point.
+
+Every conscious choice is an indeterminate input Fᵢ:
+
+S(t+1) = f(S(t), F₁, F₂, … Fₙ)
+
+These inputs cannot be predicted from past states. They make the universe ontologically uncertain, not just in our perception. Complexity emerges from the interaction between deterministic laws and conscious volition.
+
+In simple terms:
+
+• Observer uncertainty = H(observer) > 0 [bounded cognition]
+
+• Nature's uncertainty = H(Fᵢ) > 0 [free will]
+
+Reality is layered. Deterministic rules meet creative acts of consciousness. Every "random" event may be the footprint of a primal, conscious act.
+
+✅ Determinism alone does not erase uncertainty. The interplay of free will and bounded cognition shapes the world we experience.
+
+================================================================================
+
+Post 13
+--------------------------------------------------------------------------------
+Text:
+𝗦𝘆𝗺𝗺𝗲𝘁𝗿𝘆 𝗕𝗿𝗲𝗮𝗸𝗶𝗻𝗴: 𝗣𝗲𝗿𝗳𝗲𝗰𝘁𝗶𝗼𝗻 𝗕𝗲𝗰𝗼𝗺𝗲𝘀 𝗕𝗲𝗮𝘂𝘁𝘆
+
+The earliest creation was a hymn of perfect symmetry. Physics models it as a single, unified force field:
+
+SU(5) → SU(3) × SU(2) × U(1)
+
+All interactions were indistinguishable.
+Perfection was absolute invariance.
+
+But perfection is unstable. Like a pencil balanced on its tip, the slightest fluctuation causes a fall. That fall is spontaneous symmetry breaking. In that fall, the cosmos was born.
+
+In Kashmir Shaivism, this primal tremor is called
+. It is not a physical vibration but a subtle, self-referential throb of Consciousness. Stillness pregnant with becoming.
+
+Physics calls it quantum vacuum fluctuation.
+Even empty space seethes with virtual ripples.
+Spanda is this principle. It is the first quiver that disturbs perfect symmetry:
+
+न तस्य प्रारम्भो नान्तो न च मध्यं कुतश्चन।
+स्पन्दमात्रमिदं विश्वं शिवस्य परिभावनम्॥
+"This material existence (universe) has no beginning, no middle, no end. It is nothing but the pulse of Śiva's awareness."
+
+From these infinitesimal oscillations, symmetry shatters. Mass, structure, and diversity emerge.
+
+The Rig Veda knew this truth:
+
+एकोऽहम् बहुस्याम्
+"I am One. May I become many."
+
+Symmetry breaking drives creation:
+• In crystals, rotational symmetry collapses into lattices.
+• In chaos theory, bifurcations birth new attractors.
+• In biology, symmetry breaks to form left-right plans.
+
+What looks like imperfection is information encoded in form. Unity never vanishes. It hides in every broken pattern:
+
+एको देवः सर्वभूतेषु गूढः
+"The One dwells hidden in all beings."
+
+Mathematically: G → H, where G is the original group and H a subgroup.
+
+Vedanta calls this Brahman manifesting as nāma-rūpa:
+
+सदेव सोम्येदमग्र आसीत्
+"In the beginning, this was Existence alone."
+
+Perfection shattered not as a flaw but as the only way for the One to see itself.
+
+================================================================================
+
+Post 14
+--------------------------------------------------------------------------------
+Text:
+Weakness Has Always Been Our Greatest Strength. Until Now:
+
+Human beings are unique in that our minds mature far faster than our bodies. A child has a mind alive with imagination, desire, and thought, yet their small body cannot carry out what that mind envisions. They see adults reach shelves, lift weights, and discuss ideas beyond their grasp, and they feel powerless.
+
+Psychology calls this the feeling of inferiority. But this is not a flaw. It is a spark. That sense of "not enough" drives growth. It is the force that built civilisation itself.
+
+If we had the speed of a horse, we would not have invented the wheel. If we had wings, there would be no airplanes. With fur like a bear, winter clothes would not exist. Human innovation has always been a response to weakness.
+
+But AI (beyond GenAI) aims to change the equation.
+
+Even now, we can see glimpses of what's to come despite current limitations. This technology does not just patch our shortcomings; it pokes at our strengths. Intelligence, creativity, and reasoning, the very traits that made us human, are now mirrored and mimicked by machines. That feels like an attack, not an aid.
+
+Yet history shows that every time we have been challenged, we have evolved. Writing did not kill memory; it expanded it. Calculators did not destroy math; they elevated it. AI can do the same, if we progress responsibly.
+
+The challenge is clear:
+
+We must stop clinging to the illusion that intelligence alone defines us. Our true power lies in wisdom, discernment, connection, and purpose, qualities no algorithm can replicate.
+
+================================================================================
+
+Post 15
+--------------------------------------------------------------------------------
+Text:
+The Triangular Framework That Changes Everything:
+
+Alfred Adler, one of the great pioneers of psychology, taught that the past does not exist as a fixed force. It lives only in the meaning we assign to it now. This simple truth is at the heart of a triangular framework that reveals how we relate to our life experiences.
+
+Picture a triangular column. From where you sit, you can see only two sides. One side says That Bad Person. The other says Poor Me.
+
+Most of us remain trapped here, circling between blame and victimhood. We dwell on the people who hurt us or betrayed us, the injustices we faced, the wounds that shaped us. Speaking of this undesirable experience brings temporary relief. To be heard or validated is comforting. But the next day, the story returns, unchanged. The cycle repeats because the past itself does not hold us. It cannot for it doesn't exist anymore. What imprisons us is the meaning we keep giving to it in the here and now.
+
+The Upanishads say:
+कालो हि दुरतिक्रमः
+[Time cannot be overcome.]
+
+Yet they also teach that the past is a construct of memory, and memory lives only in the present mind. The Yoga Vasistha says:
+मनः कल्पनमेव जगत् [The world itself is a projection of the mind.]
+
+When we rotate the triangle, a 3rd side reveals itself. It reads: What Should I Do From Now On?
+
+The answer to this question is what matters in life. This is karma yoga in its purest form. The Bhagavad Gita declares:
+कर्मण्येवाधिकारस्ते मा फलेषु कदाचन
+[You have a right to action alone, not to the fruits of action.]
+
+In this very moment, we can choose our path. We cannot rewrite yesterday, but we can change what yesterday means by how we act today.
+
+================================================================================
+
+Post 16
+--------------------------------------------------------------------------------
+Text:
+👉🏻 LLM Market Plot Twist: OpenAI Isn't King Anymore 
+
+In just 18 months, the 
+hashtag
+#enterprise 
+hashtag
+#LLM 
+hashtag
+#API landscape has flipped on its head. OpenAI has gone from a commanding 50% share in 2023 to 25% in mid-2025. That's not just a dip. That's a dethroning.
+
+Meanwhile,(yes, the folks behind) pulled a Silicon Valley heist, tripling their share from 12% to 32%. Quietly, steadily, strategically... they've become the new enterprise darling.
+
+finally showed up to the party, now sitting at a respectable 20%.
+
+? Still hanging on, but barely, slipping down to 9% despite some great open models. Maybe good code isn't enough without good strategy.
+
+Now zoom in on the coding market:
+leads again with 42%. That is wild. This used to be's turf. But devs are shifting camps. Fast.
+
+Stay alert. The next plot twist is already loading... because LLMs have hit a 🧱 wall.
+
+Source:
+
+================================================================================
+
+Post 17
+--------------------------------------------------------------------------------
+Text:
+God, the Formless and the Formed: A Mathematical Lens
+
+Our scriptures say:
+
+"God is formless (Nirguna Brahman) as well as with form (Saguna Brahman).
+Those who say He is only with form limit Him who is limitless. Those who say He has no form limit Him just the same."
+
+Let's approach this through the lens of mathematical set theory, specifically, the null set.
+
+The Sacred ∅ (Null Set):
+
+The null set is not zero. It is the set that contains nothing, yet from it, everything arises. It is pure potential, unbounded by form, unshaped by time.
+
+Let's start with the premise that God = ∅.
+Formless, silent, empty, yet foundational.
+That which contains nothing, yet from which all is built.
+
+From formless to form - In set theory:
+
+0 = ∅
+1 = {∅}
+2 = {∅, {∅}}
+3 = {∅, {∅}, {∅, {∅}}}
+… and so on.
+
+From ∅, an infinite hierarchy of form emerges. All of number, structure, and meaning... born from emptiness.
+
+So:
+Nirguna Brahman (formless divinity) = ∅
+Saguna Brahman (divinity with form) = F(∅)
+
+'F' here stands for Functor. All constructions arising from ∅.
+
+The Paradox of Exclusivity:
+
+Denying either side limits the Infinite.
+
+• Say "God is only with form"? - You deny His foundation.
+• Say "God is only formless"? - You erase His attributes.
+
+Either view, taken in isolation, fragments the whole.
+
+Formal Expression
+Let: G = ∅ ∪ F(∅)
+Then:
+G ≠ ∅ (God is not only formless)
+G ≠ F(∅) (God is not only manifested)
+
+G is the unity of both.
+
+To restrict G to either ∅ or F(∅) alone is to misrepresent the totality. Contradiction results. QED.
+
+Gödel Weighs In:
+
+Gödel's Incompleteness Theorems remind us: No system can fully contain or prove all truths about itself, especially if it is infinite.
+
+Likewise, no concept, doctrine, or theology can fully contain the Infinite. To define God solely within a single mode (form or formlessness) is an act of limitation.
+
+So Next Time...
+When someone says "God is only this" or "God is only that," smile compassionately and say:
+
+He is both the ∅ and everything that flows from it. The unmanifest Source and His infinite manifestations. Formless, yet forever expressing.
+
+Because: ∅ contains multitudes.
+
+🕉️ Where Vedas Meet Set Theory
+💡 Advaita Meets Mathematics
+🧠 The Infinite Meets Formal Logic
+
+================================================================================
+
+Post 18
+--------------------------------------------------------------------------------
+Text:
+👁️Token Degradation is Intrinsic: 
+
+So yeah… transformer degradation is a law, not a fluke. Not a bug. Not even a limitation. Just the natural gravity of how they operate.
+
+We can't eliminate it. Courtesy: the Softmax function. We can only manage the decay:
+
+a. With better position encodings
+b. With smarter attention
+c. With state-space models that carry memory forward
+d. With retrieval that rewires context on the fly
+e. With training regimes that teach the model how to handle 100K+ coherently
+
+🪖 But the core truth remains: Transformers forget. They always have. And unless you change their nature, they always will.
+
+================================================================================
+
+Post 19
+--------------------------------------------------------------------------------
+Text:
+Back in 2018, I received this message from the leadership at Exide Industries Limited.
+
+At the time, I was deeply immersed in energy storage systems. A project I was working on had made its way to the top, and this note reminded me that depth, clarity, and original thinking still open real doors. The details of that work will remain confidential, but what matters more is something timeless: adaptability.
+
+That phase pushed me into the depths of systems thinking and engineering management. Today, as we navigate a world increasingly shaped by AI, the same core muscle matters even more: learn fast, think across disciplines, and move with clarity. My long-standing affinity for mathematics and spiritual sciences adds an unconventional edge to how I approach problems.
+
+Over the years, I've journeyed across solar, batteries, mobility, electronics, manufacturing, industrial and commercial real estate, software and beyond... all while building strong general management instincts. None of this happened by accident. It was a conscious choice to keep walking into complexity and unknowns. That's what gives me leverage today.
+
+If there's one thing I've learned, it's this: staying relevant isn't about chasing trends. It's about staying radically teachable.
+
+Let the world change. I'll change faster.
+
+================================================================================
+
+Post 20
+--------------------------------------------------------------------------------
+Text:
+🙏🏻 Why Using More Tokens Makes AI Dumber: A Mathematical Perspective 
+
+Most assume that if the model were to "think" longer, then it would perform better. But that's not what the data bysays. Here is a way to look at it:
+
+🔍 Signal vs. Noise:
+
+• 𝑆(𝑇) = useful signal extracted after T tokens
+• 𝑁(𝑇) = noise (distractions, hallucinations, spurious patterns)
+
+Then, net accuracy = 𝑨(𝑻) = 𝑺(𝑻) − 𝑵(𝑻)
+
+And the kicker: 𝑑𝑁⁄𝑑𝑇 > 𝑑𝑆⁄𝑑𝑇 when 𝑇 > 𝑇𝑐
+
+After a certain point, every extra token adds more confusion than clarity.
+
+✅️ But the real question is
+?
+
+Because signal is
+: there's only so much truth in a prompt. Signal lives on a low-dimensional manifold.
+
+But noise is
+: irrelevant patterns multiply as the model searches harder. Noise lives in a high-dimensional soup.
+
+👩‍💻 Real-World Example:
+
+A model is asked, "You have an apple and an orange. How many fruits do you have?"
+
+With 10 tokens: it answers 2.
+
+With 1000 tokens: it probably starts mapping and knitting the following: Is this a metaphor? Is the orange symbolic? What does "have" mean? Is there a quantum aspect to this?
+
+It ends up saying, "1.61 fruits, depending on interpretation."
+
+As humans, we also tend to occassionally face similar situations where overthinking contaminates our own evidence. You give a riddle. Some solve it in 5 seconds.
+
+Others overthink: "What if it's a trick?"
+
+Same with models. Given more room to (burn tokens) compute, they simulate more worlds, not more truth. Without a strong grounding prior or external feedback, they drift.
+
+This is the epistemic entropy problem. More computation increases the entropy of the "belief space", not its sharpness. Because relevant truth is
+, but the number of plausible falsehoods is
+... and the AI has no instinct to stop.
+
+P.S. The graph has a typographical error that you may not have noticed. The label should be 'Noise N(T)'. However, we can ignore it as this is a minor error. You can now congratulate me for being human! 🤷‍♂️
+
+================================================================================
+

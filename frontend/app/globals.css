@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+:root {
+  --background: #FFF8F0;
+  --foreground: #8B6F47;
+  --pastel-pink: #FFE5E5;
+  --pastel-yellow: #FFF9C4;
+  --pastel-brown: #E6D5B8;
+  --accent-pink: #FFB6C1;
+  --accent-yellow: #FFE5B4;
+  --accent-brown: #D4A574;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-pastel-pink: var(--pastel-pink);
+  --color-pastel-yellow: var(--pastel-yellow);
+  --color-pastel-brown: var(--pastel-brown);
+  --color-accent-pink: var(--accent-pink);
+  --color-accent-yellow: var(--accent-yellow);
+  --color-accent-brown: var(--accent-brown);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #3D2F1F;
+    --foreground: #FFF8F0;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+input:focus {
+  --tw-ring-color: var(--accent-pink);
+}
+
+button:focus {
+  --tw-ring-color: var(--accent-brown);
+}

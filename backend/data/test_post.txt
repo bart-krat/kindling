@@ -1,0 +1,5 @@
+This is one of those truths that feels obvious only after you've stared at it long enough or been sucker-punched by computer science or physics, yet people still manage to trip over it with impressive consistency.
+
+Infinite memory does not imply zero hallucination. Not even close.
+
+Memory is storage. Hallucination is reasoning failure under uncertainty. Those are orthogonal axes. You can max out one and still faceplant on the other.
