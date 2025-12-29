@@ -1,0 +1,12 @@
+{
+  "image_urls": [
+    "https://replicate.delivery/xezq/PbjPErBTXWa2LNLbtcCIztkCeEmaCuHe0RFgSMtedOkhL7vrA/tmp_sjz_nm4.jpg"
+  ],
+  "model": "minimax/image-01",
+  "prompt": "professional portrait, Innovative tech entrepreneur, adventurous traveler, cultural enthusiast, \n    social and outgoing, values innovation and collaboration, high quality, detailed, photorealistic",
+  "base_image_url": "https://upload.wikimedia.org/wikipedia/commons/f/ff/TechCrunch_Disrupt_San_Francisco_2019_-_Day_3_Carl_Pei_cropped.jpeg",
+  "prompt_strength": 0.2,
+  "guidance_scale": 7.5,
+  "output_path": "data/generated_avatar.png",
+  "personality_summary": "Innovative tech entrepreneur, adventurous traveler, cultural enthusiast, \n    social and outgoing, values innovation and collaboration"
+}

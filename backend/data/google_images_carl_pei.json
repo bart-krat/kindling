@@ -1,0 +1,16 @@
+{
+  "query": "Carl Pei",
+  "total_images": 2,
+  "images": [
+    {
+      "url": "https://en.wikipedia.org/wiki/Carl_Pei",
+      "title": "Carl Pei - Wikipedia",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/f/ff/TechCrunch_Disrupt_San_Francisco_2019_-_Day_3_Carl_Pei_cropped.jpeg"
+    },
+    {
+      "url": "https://www.wired.com/story/carl-pei-thinks-the-phone-of-the-future-will-only-have-one-app/",
+      "title": "Carl Pei Thinks the Phone of the Future ...",
+      "source_url": "https://media.wired.com/photos/68306b02c0676e785fc69625/3:2/w_2560%2Cc_limit/w_08A5895.jpg"
+    }
+  ]
+}
