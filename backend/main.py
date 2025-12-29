@@ -10,6 +10,7 @@ from src.create_embeddings import EmbeddingStore, load_labeled_json
 from src.perspective import PerspectiveGenerator
 import os
 import re
+import sys
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -41,6 +42,7 @@ class SearchResponse(BaseModel):
     name: str
     linkedin: Optional[Dict] = None
     twitter: Optional[Dict] = None
+    instagram: Optional[Dict] = None
 
 
 class ScrapeRequest(BaseModel):
@@ -90,10 +92,47 @@ async def health():
     return {"status": "ok"}
 
 
+@app.get("/api/test-instagram")
+async def test_instagram():
+    """Test endpoint to verify Instagram search"""
+    import sys
+    print("\n" + "="*60, file=sys.stderr, flush=True)
+    print("TEST: Instagram search test", file=sys.stderr, flush=True)
+    print("="*60 + "\n", file=sys.stderr, flush=True)
+    
+    try:
+        searcher = SERPProfileSearcher(debug=True)
+        print("TEST: Searcher initialized", file=sys.stderr, flush=True)
+        
+        result = searcher.search_instagram_profile("Carl Pei", top_n=2)
+        print(f"\nTEST RESULT: {result}", file=sys.stderr, flush=True)
+        
+        return {
+            "success": True,
+            "result": result,
+            "message": "Instagram search test completed"
+        }
+    except Exception as e:
+        print(f"TEST ERROR: {e}", file=sys.stderr, flush=True)
+        import traceback
+        traceback.print_exc(file=sys.stderr)
+        return {
+            "success": False,
+            "error": str(e),
+            "message": "Instagram search test failed"
+        }
+
+
+@app.get("/test")
+async def simple_test():
+    """Simple test endpoint to verify server is running"""
+    return {"status": "ok", "message": "Server is running"}
+
+
 @app.post("/api/search-profiles", response_model=SearchResponse)
 async def search_profiles(request: SearchRequest):
     """
-    Search for LinkedIn, X (Twitter) profiles for a given name
+    Search for LinkedIn, X (Twitter), and Instagram profiles for a given name
     
     Args:
         request: SearchRequest containing name and optional top_n
@@ -105,8 +144,12 @@ async def search_profiles(request: SearchRequest):
         if not request.name or not request.name.strip():
             raise HTTPException(status_code=400, detail="Name cannot be empty")
         
-        # Initialize searcher (debug=False for production)
-        searcher = SERPProfileSearcher(debug=False)
+        # Initialize searcher (debug=True to see what's happening)
+        print(f"\n{'='*60}", file=sys.stderr, flush=True)
+        print(f"[API] Starting search for: {request.name}", file=sys.stderr, flush=True)
+        print(f"{'='*60}\n", file=sys.stderr, flush=True)
+        
+        searcher = SERPProfileSearcher(debug=True)
         
         # Search for profiles
         results = searcher.search_all_profiles(
@@ -114,10 +157,19 @@ async def search_profiles(request: SearchRequest):
             top_n=request.top_n
         )
         
+        # Log results for debugging - use stderr to ensure it shows
+        print(f"\n{'='*60}", file=sys.stderr, flush=True)
+        print(f"[API] Search results for {request.name}:", file=sys.stderr, flush=True)
+        print(f"  LinkedIn: {results.get('linkedin')}", file=sys.stderr, flush=True)
+        print(f"  Twitter: {results.get('twitter')}", file=sys.stderr, flush=True)
+        print(f"  Instagram: {results.get('instagram')}", file=sys.stderr, flush=True)
+        print(f"{'='*60}\n", file=sys.stderr, flush=True)
+        
         return SearchResponse(
             name=results.get("name", request.name),
             linkedin=results.get("linkedin"),
-            twitter=results.get("twitter")
+            twitter=results.get("twitter"),
+            instagram=results.get("instagram")
         )
         
     except ValueError as e:

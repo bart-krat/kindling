@@ -125,7 +125,7 @@ class SERPProfileSearcher:
         
         Args:
             api_response: API response dictionary
-            platform: Filter by platform ('linkedin', 'twitter') or None for all
+            platform: Filter by platform ('linkedin', 'twitter', 'instagram') or None for all
             
         Returns:
             List of URLs
@@ -155,6 +155,8 @@ class SERPProfileSearcher:
                                 elif platform == 'twitter' and ('twitter.com/' in url or 'x.com/' in url):
                                     # Normalize x.com to twitter.com
                                     url = url.replace('x.com', 'twitter.com')
+                                    urls.append(url)
+                                elif platform == 'instagram' and 'instagram.com/' in url:
                                     urls.append(url)
                             else:
                                 urls.append(url)
@@ -364,16 +366,75 @@ class SERPProfileSearcher:
                 print(f"  ✗ Error searching Twitter: {e}")
             return None
     
+    def search_instagram_profile(self, name: str, top_n: int = 2) -> Optional[Dict]:
+        """
+        Search for Instagram profile using DataForSEO SERP API
+        
+        Args:
+            name: Person's name to search for
+            top_n: Number of top results to return (default: 2)
+            
+        Returns:
+            Dictionary with 'url' and 'all_urls'
+        """
+        try:
+            print(f"  [INSTAGRAM] Method called for: {name}")  # Always print, even if debug=False
+            if self.debug:
+                print(f"  Searching Instagram for: {name}")
+            
+            query = f"{name} instagram"
+            print(f"  [INSTAGRAM] Query: {query}")  # Always print
+            api_response = self.search_google(query, depth=1)
+            print(f"  [INSTAGRAM] API response received: {api_response is not None}")  # Always print
+            
+            if not api_response:
+                if self.debug:
+                    print(f"  ⚠ No API response for Instagram search")
+                return None
+            
+            urls = self.extract_urls_from_results(api_response, platform='instagram')
+            
+            if urls:
+                # Filter out non-profile URLs and get top N
+                profile_urls = [
+                    url for url in urls 
+                    if not any(excluded in url for excluded in ['/p/', '/reel/', '/tv/', '/explore/', '/accounts/', '/direct/'])
+                ]
+                # Remove duplicates
+                profile_urls = list(dict.fromkeys(profile_urls))
+                profile_urls = profile_urls[:top_n]
+                
+                result = {
+                    'url': profile_urls[0] if profile_urls else None,
+                    'all_urls': profile_urls
+                }
+                
+                if self.debug:
+                    print(f"  ✓ Found {len(profile_urls)} Instagram profile(s): {profile_urls[0] if profile_urls else 'None'}")
+                
+                return result
+            else:
+                if self.debug:
+                    print(f"  ⚠ No Instagram profiles found")
+                return None
+                
+        except Exception as e:
+            if self.debug:
+                print(f"  ✗ Error searching Instagram: {e}")
+                import traceback
+                traceback.print_exc()
+            return None
+    
     def search_all_profiles(self, name: str, top_n: int = 2) -> Dict:
         """
-        Search for all profiles (LinkedIn, Twitter) using DataForSEO SERP API
+        Search for all profiles (LinkedIn, Twitter, Instagram) using DataForSEO SERP API
         
         Args:
             name: Person's name to search for
             top_n: Number of top results to return for each platform (default: 2)
             
         Returns:
-            Dictionary with 'name', 'linkedin', 'twitter' (with user_id for Twitter)
+            Dictionary with 'name', 'linkedin', 'twitter', 'instagram' (with user_id for Twitter)
         """
         if self.debug:
             print(f"\n{'='*60}")
@@ -383,7 +444,8 @@ class SERPProfileSearcher:
         results = {
             'name': name,
             'linkedin': None,
-            'twitter': None
+            'twitter': None,
+            'instagram': None
         }
         
         # Search LinkedIn
@@ -406,6 +468,32 @@ class SERPProfileSearcher:
                 'username': twitter_result.get('username'),
                 'user_id': twitter_result.get('user_id')
             }
+        
+        # Small delay between API calls
+        time.sleep(1)
+        
+        # Search Instagram
+        if self.debug:
+            print(f"\n  [DEBUG] About to call search_instagram_profile for: {name}")
+        try:
+            instagram_result = self.search_instagram_profile(name, top_n=top_n)
+            if self.debug:
+                print(f"  [DEBUG] Instagram search returned: {instagram_result}")
+            if instagram_result:
+                results['instagram'] = {
+                    'profile_url': instagram_result['url'],
+                    'all_urls': instagram_result.get('all_urls', [])
+                }
+                if self.debug:
+                    print(f"  [DEBUG] Instagram added to results")
+            else:
+                if self.debug:
+                    print(f"  [DEBUG] Instagram result was None/empty")
+        except Exception as e:
+            if self.debug:
+                print(f"  [DEBUG] Exception in Instagram search: {e}")
+                import traceback
+                traceback.print_exc()
         
         return results
     
@@ -483,6 +571,18 @@ if __name__ == "__main__":
                 print(f"    {i}. {url}")
     else:
         print("Twitter/X: Not found")
+    
+    print()
+    
+    if results['instagram']:
+        print("Instagram:")
+        print(f"  Primary URL: {results['instagram']['profile_url']}")
+        if results['instagram'].get('all_urls') and len(results['instagram']['all_urls']) > 1:
+            print(f"  All URLs found ({len(results['instagram']['all_urls'])}):")
+            for i, url in enumerate(results['instagram']['all_urls'], 1):
+                print(f"    {i}. {url}")
+    else:
+        print("Instagram: Not found")
     
     # Save results
     print("\n" + "=" * 60)

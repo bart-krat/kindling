@@ -1,5 +1,5 @@
 {
-  "name": "carl pei",
+  "name": "Carl Pei",
   "linkedin": {
     "profile_url": "https://uk.linkedin.com/in/getpeid",
     "all_urls": [
@@ -12,6 +12,12 @@
       "https://twitter.com/getpeid"
     ],
     "username": "getpeid",
-    "user_id": "41777199"
+    "user_id": null
+  },
+  "instagram": {
+    "profile_url": "https://www.instagram.com/getpeid",
+    "all_urls": [
+      "https://www.instagram.com/getpeid"
+    ]
   }
 }
