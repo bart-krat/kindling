@@ -5,11 +5,13 @@ from typing import Optional, Dict, List
 from api.serp import SERPProfileSearcher
 from api.twitter import TwitterScraper
 from api.linkedin import LinkedInScraper
+from api.instagram import InstagramScraper
 from api.image import ImageSearcher
 from api.articles import ArticleSearcher
 from src.categorise import TextLabeler
 from src.create_embeddings import EmbeddingStore, load_labeled_json
 from src.perspective import PerspectiveGenerator
+from models.profile_state import ProfileState
 import os
 import re
 import sys
@@ -53,6 +55,7 @@ class SearchResponse(BaseModel):
 class ScrapeRequest(BaseModel):
     user_id: Optional[str] = None  # Twitter user ID
     linkedin_url: Optional[str] = None  # LinkedIn profile URL
+    instagram_url: Optional[str] = None  # Instagram profile URL
     name: str  # Person's name (for filename)
 
 
@@ -171,6 +174,32 @@ async def search_profiles(request: SearchRequest):
         print(f"  Articles: {len(articles) if articles else 0} found", file=sys.stderr, flush=True)
         print(f"{'='*60}\n", file=sys.stderr, flush=True)
         
+        # Save to centralized state object
+        try:
+            # Load existing state or create new one
+            script_dir = os.path.dirname(os.path.abspath(__file__))
+            data_dir = os.path.join(script_dir, "data")
+            profile_state = ProfileState.load_from_file(request.name.strip(), data_dir)
+            
+            if profile_state is None:
+                profile_state = ProfileState(name=request.name.strip())
+            
+            # Update with search results
+            profile_state.update_search_results(
+                linkedin=results.get("linkedin"),
+                twitter=results.get("twitter"),
+                instagram=results.get("instagram"),
+                image=image_result,
+                articles=articles if articles else None
+            )
+            
+            # Save state to file
+            state_file = profile_state.save_to_file(data_dir)
+            print(f"[API] Profile state saved to: {state_file}", file=sys.stderr, flush=True)
+        except Exception as e:
+            print(f"[API] Warning: Failed to save profile state: {e}", file=sys.stderr, flush=True)
+            # Don't fail the request if state saving fails
+        
         return SearchResponse(
             name=results.get("name", request.name),
             linkedin=results.get("linkedin"),
@@ -265,14 +294,25 @@ async def scrape_profiles(request: ScrapeRequest):
     Returns:
         ScrapeResponse with file paths and counts
     """
-    if not request.user_id and not request.linkedin_url:
+    if not request.user_id and not request.linkedin_url and not request.instagram_url:
         raise HTTPException(
             status_code=400,
-            detail="At least one of user_id (Twitter) or linkedin_url must be provided"
+            detail="At least one of user_id (Twitter), linkedin_url, or instagram_url must be provided"
         )
     
     # Sanitize name for filename
     safe_name = re.sub(r'[^a-zA-Z0-9_-]', '_', request.name.strip())
+    
+    # Load existing profile state or create new one
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    data_dir = os.path.join(script_dir, "data")
+    profile_state = ProfileState.load_from_file(request.name.strip(), data_dir)
+    
+    if profile_state is None:
+        profile_state = ProfileState(name=request.name.strip())
+        print(f"[API] Created new profile state for: {request.name}", file=sys.stderr, flush=True)
+    else:
+        print(f"[API] Loaded existing profile state for: {request.name}", file=sys.stderr, flush=True)
     
     results = {
         "success": True,
@@ -306,6 +346,9 @@ async def scrape_profiles(request: ScrapeRequest):
                 # Return relative path from backend directory
                 results["twitter_file"] = f"data/{twitter_filename}"
                 results["twitter_count"] = len(tweets)
+                
+                # Update profile state with scraped tweets
+                profile_state.update_scraped_content(twitter_posts=tweets)
             else:
                 errors.append("No tweets found for the provided user_id")
                 
@@ -341,6 +384,9 @@ async def scrape_profiles(request: ScrapeRequest):
                     # Return relative path from backend directory
                     results["linkedin_file"] = f"data/{linkedin_filename}"
                     results["linkedin_count"] = len(posts)
+                    
+                    # Update profile state with scraped LinkedIn posts
+                    profile_state.update_scraped_content(linkedin_posts=posts)
                 else:
                     errors.append("No LinkedIn posts found")
                     
@@ -353,6 +399,61 @@ async def scrape_profiles(request: ScrapeRequest):
                     linkedin_scraper.close()
                 except:
                     pass
+    
+    # Scrape Instagram photos if instagram_url is provided
+    if request.instagram_url:
+        instagram_scraper = None
+        try:
+            # Initialize Instagram scraper
+            instagram_scraper = InstagramScraper(headless=False, debug=True)
+            
+            # Try to login (optional - may work without login for public profiles)
+            try:
+                login_success = instagram_scraper.login()
+                if not login_success:
+                    print("[API] Instagram login failed, attempting direct access", file=sys.stderr, flush=True)
+            except:
+                print("[API] Instagram login skipped, attempting direct access", file=sys.stderr, flush=True)
+            
+            # Scrape photos (20 photos as requested)
+            photos = instagram_scraper.get_profile_photos(request.instagram_url, max_photos=20)
+            
+            if photos:
+                # Create data directory if it doesn't exist
+                script_dir = os.path.dirname(os.path.abspath(__file__))
+                data_dir = os.path.join(script_dir, "data")
+                os.makedirs(data_dir, exist_ok=True)
+                
+                # Extract username from Instagram URL for filename
+                instagram_username = request.instagram_url.rstrip('/').split('/')[-1]
+                instagram_filename = f"instagram_photos_{safe_name}_{instagram_username}.txt"
+                instagram_file = os.path.join(data_dir, instagram_filename)
+                instagram_scraper.save_photos_to_file(photos, instagram_file, request.instagram_url)
+                # Return relative path from backend directory
+                results["instagram_file"] = f"data/{instagram_filename}"
+                results["instagram_count"] = len(photos)
+                
+                # Update profile state with scraped Instagram photos
+                profile_state.update_scraped_content(instagram_photos=photos)
+            else:
+                errors.append("No Instagram photos found")
+                
+        except Exception as e:
+            errors.append(f"Instagram scraping error: {str(e)}")
+        finally:
+            # Always close the browser
+            if instagram_scraper:
+                try:
+                    instagram_scraper.close()
+                except:
+                    pass
+    
+    # Save updated profile state with scraped content
+    try:
+        state_file = profile_state.save_to_file(data_dir)
+        print(f"[API] Profile state updated and saved to: {state_file}", file=sys.stderr, flush=True)
+    except Exception as e:
+        print(f"[API] Warning: Failed to save profile state: {e}", file=sys.stderr, flush=True)
     
     # Step: Parse scraped files and collect texts for categorization
     script_dir = os.path.dirname(os.path.abspath(__file__))
