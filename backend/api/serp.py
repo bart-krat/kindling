@@ -378,14 +378,11 @@ class SERPProfileSearcher:
             Dictionary with 'url' and 'all_urls'
         """
         try:
-            print(f"  [INSTAGRAM] Method called for: {name}")  # Always print, even if debug=False
             if self.debug:
                 print(f"  Searching Instagram for: {name}")
             
             query = f"{name} instagram"
-            print(f"  [INSTAGRAM] Query: {query}")  # Always print
             api_response = self.search_google(query, depth=1)
-            print(f"  [INSTAGRAM] API response received: {api_response is not None}")  # Always print
             
             if not api_response:
                 if self.debug:
@@ -473,27 +470,12 @@ class SERPProfileSearcher:
         time.sleep(1)
         
         # Search Instagram
-        if self.debug:
-            print(f"\n  [DEBUG] About to call search_instagram_profile for: {name}")
-        try:
-            instagram_result = self.search_instagram_profile(name, top_n=top_n)
-            if self.debug:
-                print(f"  [DEBUG] Instagram search returned: {instagram_result}")
-            if instagram_result:
-                results['instagram'] = {
-                    'profile_url': instagram_result['url'],
-                    'all_urls': instagram_result.get('all_urls', [])
-                }
-                if self.debug:
-                    print(f"  [DEBUG] Instagram added to results")
-            else:
-                if self.debug:
-                    print(f"  [DEBUG] Instagram result was None/empty")
-        except Exception as e:
-            if self.debug:
-                print(f"  [DEBUG] Exception in Instagram search: {e}")
-                import traceback
-                traceback.print_exc()
+        instagram_result = self.search_instagram_profile(name, top_n=top_n)
+        if instagram_result:
+            results['instagram'] = {
+                'profile_url': instagram_result['url'],
+                'all_urls': instagram_result.get('all_urls', [])
+            }
         
         return results
     

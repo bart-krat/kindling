@@ -14,6 +14,17 @@ interface SearchResults {
     username?: string;
     user_id?: string;
   } | null;
+  instagram: {
+    profile_url: string;
+    all_urls: string[];
+  } | null;
+  image: {
+    filename: string;
+    url: string;
+    title?: string;
+    source?: string;
+  } | null;
+  articles: string[] | null;
 }
 
 interface ScrapeResults {
@@ -277,7 +288,68 @@ export default function Home() {
               </div>
             )}
 
-            {!results.linkedin && !results.twitter && (
+            {results.instagram && (
+              <div className="p-4 rounded-lg border-2" style={{ backgroundColor: "var(--pastel-brown)", borderColor: "var(--pastel-brown)" }}>
+                <h3 className="text-xl font-medium mb-2" style={{ color: "var(--foreground)" }}>Instagram</h3>
+                <a
+                  href={results.instagram.profile_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:underline break-all"
+                >
+                  {results.instagram.profile_url}
+                </a>
+              </div>
+            )}
+
+            {results.image && (
+              <div className="p-4 rounded-lg border-2" style={{ backgroundColor: "var(--pastel-brown)", borderColor: "var(--pastel-brown)" }}>
+                <h3 className="text-xl font-medium mb-2" style={{ color: "var(--foreground)" }}>Profile Image</h3>
+                <div className="flex flex-col items-start gap-2">
+                  <img
+                    src={`/${results.image.filename}`}
+                    alt={results.image.title || "Profile image"}
+                    className="max-w-full h-auto rounded-lg border-2"
+                    style={{ 
+                      maxHeight: "400px",
+                      borderColor: "var(--pastel-pink)"
+                    }}
+                  />
+                  {results.image.title && (
+                    <p className="text-sm" style={{ color: "var(--foreground)" }}>
+                      {results.image.title}
+                    </p>
+                  )}
+                  {results.image.source && (
+                    <p className="text-sm" style={{ color: "var(--foreground)" }}>
+                      Source: {results.image.source}
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {results.articles && results.articles.length > 0 && (
+              <div className="p-4 rounded-lg border-2" style={{ backgroundColor: "var(--pastel-brown)", borderColor: "var(--pastel-brown)" }}>
+                <h3 className="text-xl font-medium mb-3" style={{ color: "var(--foreground)" }}>Articles</h3>
+                <ul className="space-y-2">
+                  {results.articles.map((articleUrl, index) => (
+                    <li key={index}>
+                      <a
+                        href={articleUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:underline break-all block"
+                      >
+                        {articleUrl}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {!results.linkedin && !results.twitter && !results.instagram && !results.image && (!results.articles || results.articles.length === 0) && (
               <div className="p-4 rounded-lg" style={{ backgroundColor: "var(--pastel-yellow)" }}>
                 <p style={{ color: "var(--foreground)" }}>No profiles found for this name.</p>
               </div>

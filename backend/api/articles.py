@@ -6,7 +6,7 @@ import requests
 from typing import List, Dict, Optional
 from dotenv import load_dotenv
 from bs4 import BeautifulSoup
-from serp import SERPProfileSearcher
+from .serp import SERPProfileSearcher
 
 # Load environment variables
 load_dotenv(dotenv_path='.env')

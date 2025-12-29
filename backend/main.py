@@ -5,12 +5,15 @@ from typing import Optional, Dict, List
 from api.serp import SERPProfileSearcher
 from api.twitter import TwitterScraper
 from api.linkedin import LinkedInScraper
+from api.image import ImageSearcher
+from api.articles import ArticleSearcher
 from src.categorise import TextLabeler
 from src.create_embeddings import EmbeddingStore, load_labeled_json
 from src.perspective import PerspectiveGenerator
 import os
 import re
 import sys
+import time
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -43,6 +46,8 @@ class SearchResponse(BaseModel):
     linkedin: Optional[Dict] = None
     twitter: Optional[Dict] = None
     instagram: Optional[Dict] = None
+    image: Optional[Dict] = None
+    articles: Optional[List[str]] = None
 
 
 class ScrapeRequest(BaseModel):
@@ -92,53 +97,16 @@ async def health():
     return {"status": "ok"}
 
 
-@app.get("/api/test-instagram")
-async def test_instagram():
-    """Test endpoint to verify Instagram search"""
-    import sys
-    print("\n" + "="*60, file=sys.stderr, flush=True)
-    print("TEST: Instagram search test", file=sys.stderr, flush=True)
-    print("="*60 + "\n", file=sys.stderr, flush=True)
-    
-    try:
-        searcher = SERPProfileSearcher(debug=True)
-        print("TEST: Searcher initialized", file=sys.stderr, flush=True)
-        
-        result = searcher.search_instagram_profile("Carl Pei", top_n=2)
-        print(f"\nTEST RESULT: {result}", file=sys.stderr, flush=True)
-        
-        return {
-            "success": True,
-            "result": result,
-            "message": "Instagram search test completed"
-        }
-    except Exception as e:
-        print(f"TEST ERROR: {e}", file=sys.stderr, flush=True)
-        import traceback
-        traceback.print_exc(file=sys.stderr)
-        return {
-            "success": False,
-            "error": str(e),
-            "message": "Instagram search test failed"
-        }
-
-
-@app.get("/test")
-async def simple_test():
-    """Simple test endpoint to verify server is running"""
-    return {"status": "ok", "message": "Server is running"}
-
-
 @app.post("/api/search-profiles", response_model=SearchResponse)
 async def search_profiles(request: SearchRequest):
     """
-    Search for LinkedIn, X (Twitter), and Instagram profiles for a given name
+    Search for LinkedIn, X (Twitter), Instagram profiles, images, and articles for a given name
     
     Args:
         request: SearchRequest containing name and optional top_n
         
     Returns:
-        SearchResponse with profile URLs and details
+        SearchResponse with profile URLs, details, images, and articles
     """
     try:
         if not request.name or not request.name.strip():
@@ -157,19 +125,59 @@ async def search_profiles(request: SearchRequest):
             top_n=request.top_n
         )
         
+        # Small delay before image search
+        time.sleep(1)
+        
+        # Search for images
+        image_result = None
+        try:
+            image_searcher = ImageSearcher(debug=True)
+            image_result = image_searcher.search_images(
+                query=request.name.strip(),
+                max_images=1
+            )
+            if image_result:
+                print(f"[API] Image saved: {image_result.get('filename')}", file=sys.stderr, flush=True)
+        except Exception as e:
+            print(f"[API] Error searching images: {e}", file=sys.stderr, flush=True)
+            # Don't fail the whole request if image search fails
+            image_result = None
+        
+        # Small delay before article search
+        time.sleep(1)
+        
+        # Search for articles
+        articles = None
+        try:
+            article_searcher = ArticleSearcher(debug=True)
+            articles = article_searcher.search_articles(
+                name=request.name.strip(),
+                top_n=5
+            )
+            if articles:
+                print(f"[API] Found {len(articles)} articles", file=sys.stderr, flush=True)
+        except Exception as e:
+            print(f"[API] Error searching articles: {e}", file=sys.stderr, flush=True)
+            # Don't fail the whole request if article search fails
+            articles = None
+        
         # Log results for debugging - use stderr to ensure it shows
         print(f"\n{'='*60}", file=sys.stderr, flush=True)
         print(f"[API] Search results for {request.name}:", file=sys.stderr, flush=True)
         print(f"  LinkedIn: {results.get('linkedin')}", file=sys.stderr, flush=True)
         print(f"  Twitter: {results.get('twitter')}", file=sys.stderr, flush=True)
         print(f"  Instagram: {results.get('instagram')}", file=sys.stderr, flush=True)
+        print(f"  Image: {image_result.get('filename') if image_result else 'None'}", file=sys.stderr, flush=True)
+        print(f"  Articles: {len(articles) if articles else 0} found", file=sys.stderr, flush=True)
         print(f"{'='*60}\n", file=sys.stderr, flush=True)
         
         return SearchResponse(
             name=results.get("name", request.name),
             linkedin=results.get("linkedin"),
             twitter=results.get("twitter"),
-            instagram=results.get("instagram")
+            instagram=results.get("instagram"),
+            image=image_result,
+            articles=articles if articles else None
         )
         
     except ValueError as e:
