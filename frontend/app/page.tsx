@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 interface SearchResults {
   name: string;
@@ -36,16 +37,6 @@ interface ScrapeResults {
   linkedin_count?: number;
 }
 
-interface PerspectiveResults {
-  perspective: string;
-  sources: Array<{
-    rank: number;
-    category: string;
-    summary: string;
-    relevance_score?: number;
-  }>;
-  query: string;
-}
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -55,10 +46,6 @@ export default function Home() {
   const [scraping, setScraping] = useState(false);
   const [scrapeResults, setScrapeResults] = useState<ScrapeResults | null>(null);
   const [scrapeError, setScrapeError] = useState<string | null>(null);
-  const [question, setQuestion] = useState("");
-  const [perspectiveLoading, setPerspectiveLoading] = useState(false);
-  const [perspectiveResults, setPerspectiveResults] = useState<PerspectiveResults | null>(null);
-  const [perspectiveError, setPerspectiveError] = useState<string | null>(null);
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) {
@@ -100,49 +87,6 @@ export default function Home() {
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       handleSearch();
-    }
-  };
-
-  const handleKeyPressQuestion = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      handleAskQuestion();
-    }
-  };
-
-  const handleAskQuestion = async () => {
-    if (!question.trim()) {
-      setPerspectiveError("Please enter a question");
-      return;
-    }
-
-    setPerspectiveLoading(true);
-    setPerspectiveError(null);
-    setPerspectiveResults(null);
-
-    try {
-      const response = await fetch("http://localhost:8000/api/generate-perspective", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          query: question.trim(),
-          top_k: 5,
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || "Failed to generate perspective");
-      }
-
-      const data: PerspectiveResults = await response.json();
-      setPerspectiveResults(data);
-    } catch (err) {
-      setPerspectiveError(err instanceof Error ? err.message : "An error occurred while generating perspective");
-      console.error("Perspective error:", err);
-    } finally {
-      setPerspectiveLoading(false);
     }
   };
 
@@ -397,98 +341,32 @@ export default function Home() {
                     )}
                   </div>
                 )}
+
+                {/* Button to navigate to unique page - only shows after scraping is complete */}
+                {scrapeResults.success && (
+                  <div className="mt-4 pt-4 border-t-2" style={{ borderColor: "var(--pastel-brown)" }}>
+                    <Link
+                      href="/unique"
+                      onClick={() => {
+                        // Store person name in localStorage for the unique page
+                        if (results?.name) {
+                          localStorage.setItem("currentPersonName", results.name);
+                        }
+                      }}
+                      className="inline-block px-6 py-3 rounded-lg font-medium text-lg transition-colors hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                      style={{
+                        backgroundColor: "var(--accent-brown)",
+                        color: "var(--background)",
+                      }}
+                    >
+                      Generate Unique Perspective →
+                    </Link>
+                  </div>
+                )}
               </div>
             )}
           </div>
         )}
-
-        {/* Question/Perspective Section */}
-        <div className="w-full mt-8 pt-8 border-t-2" style={{ borderColor: "var(--pastel-brown)" }}>
-          <h2 className="text-2xl font-semibold mb-4" style={{ color: "var(--foreground)" }}>
-            Ask a Question
-          </h2>
-          <p className="text-sm mb-4" style={{ color: "var(--foreground)" }}>
-            Ask questions about the scraped content. The AI will search through the categorized posts and generate a perspective.
-          </p>
-
-          <div className="flex gap-3 items-center mb-4">
-            <input
-              type="text"
-              value={question}
-              onChange={(e) => setQuestion(e.target.value)}
-              onKeyPress={handleKeyPressQuestion}
-              placeholder="Ask a question about the scraped content..."
-              className="flex-1 px-4 py-3 rounded-lg border-2 text-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors disabled:opacity-50"
-              style={{
-                backgroundColor: "var(--pastel-yellow)",
-                borderColor: "var(--pastel-brown)",
-                color: "var(--foreground)",
-              }}
-              disabled={perspectiveLoading}
-            />
-            <button
-              onClick={handleAskQuestion}
-              disabled={perspectiveLoading}
-              className="px-6 py-3 rounded-lg font-medium text-lg transition-colors hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-              style={{
-                backgroundColor: "var(--pastel-pink)",
-                color: "var(--foreground)",
-              }}
-            >
-              {perspectiveLoading ? "Thinking..." : "Ask"}
-            </button>
-          </div>
-
-          {/* Perspective Error */}
-          {perspectiveError && (
-            <div className="w-full mb-4 p-4 rounded-lg" style={{ backgroundColor: "var(--pastel-pink)" }}>
-              <p className="text-red-700 font-medium">Error: {perspectiveError}</p>
-            </div>
-          )}
-
-          {/* Perspective Results */}
-          {perspectiveResults && (
-            <div className="w-full space-y-4 p-6 rounded-lg border-2" style={{ backgroundColor: "var(--pastel-brown)", borderColor: "var(--accent-brown)" }}>
-              <div>
-                <h3 className="text-lg font-semibold mb-2" style={{ color: "var(--foreground)" }}>
-                  Question: {perspectiveResults.query}
-                </h3>
-                <div className="p-4 rounded-lg mt-3" style={{ backgroundColor: "var(--pastel-yellow)" }}>
-                  <p className="whitespace-pre-wrap leading-relaxed" style={{ color: "var(--foreground)" }}>
-                    {perspectiveResults.perspective}
-                  </p>
-                </div>
-              </div>
-
-              {perspectiveResults.sources && perspectiveResults.sources.length > 0 && (
-                <div className="mt-4">
-                  <h4 className="text-md font-semibold mb-3" style={{ color: "var(--foreground)" }}>
-                    Sources ({perspectiveResults.sources.length}):
-                  </h4>
-                  <div className="space-y-2">
-                    {perspectiveResults.sources.map((source, idx) => (
-                      <div key={idx} className="p-3 rounded-lg" style={{ backgroundColor: "var(--pastel-yellow)" }}>
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="text-xs font-medium px-2 py-1 rounded" style={{ backgroundColor: "var(--pastel-pink)", color: "var(--foreground)" }}>
-                            {source.category}
-                          </span>
-                          {source.relevance_score && (
-                            <span className="text-xs" style={{ color: "var(--foreground)" }}>
-                              Relevance: {(source.relevance_score * 100).toFixed(1)}%
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-sm" style={{ color: "var(--foreground)" }}>
-                          {source.summary}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
       </main>
     </div>
   );
