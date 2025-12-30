@@ -2,9 +2,11 @@ import os
 import json
 from typing import Optional, Dict
 from dotenv import load_dotenv
-import replicate
 
 load_dotenv(dotenv_path='.env')
+
+# Lazy import replicate to avoid compatibility issues with Python 3.14 at startup
+# Only import when ImageGenerator is actually instantiated
 
 
 class ImageGenerator:
@@ -24,6 +26,15 @@ class ImageGenerator:
         
         # Set Replicate API token
         os.environ['REPLICATE_API_TOKEN'] = self.replicate_token
+        
+        # Lazy import replicate here to avoid compatibility issues at module import time
+        try:
+            import replicate
+            self.replicate = replicate
+        except ImportError as e:
+            raise ImportError(f"Failed to import replicate: {e}. Please ensure replicate is installed: pip install replicate")
+        except Exception as e:
+            raise RuntimeError(f"Error initializing replicate: {e}. This may be due to Python 3.14 compatibility issues. Consider using Python 3.13 or earlier.")
         
         if debug:
             print("✓ ImageGenerator initialized with Replicate API")
@@ -61,7 +72,7 @@ class ImageGenerator:
                 subject_reference = open(subject_reference, 'rb')
             
             # Run the model
-            output = replicate.run(
+            output = self.replicate.run(
                 "minimax/image-01",
                 input={
                     "prompt": prompt,

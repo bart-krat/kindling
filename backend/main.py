@@ -12,6 +12,8 @@ from src.categorise import TextLabeler
 from src.create_embeddings import EmbeddingStore, load_labeled_json
 from src.perspective import PerspectiveGenerator
 from src.instagram_analyzer import InstagramImageAnalyzer
+from src.prompt_summarise import PromptSummarizer
+from src.generator import ImageGenerator
 from models.profile_state import ProfileState
 import os
 import re
@@ -80,15 +82,28 @@ class PerspectiveResponse(BaseModel):
     query: str
 
 
+class GenerateRequest(BaseModel):
+    name: str
+    number_of_images: Optional[int] = 3
+
+
+class GenerateResponse(BaseModel):
+    success: bool
+    message: str
+    prompt: Optional[str] = None
+    generated_images: Optional[List[str]] = None  # List of filenames relative to public
+
+
 @app.get("/")
 async def root():
     return {
         "message": "Profile Search API",
         "version": "1.0.0",
-        "endpoints": {
+            "endpoints": {
             "search": "/api/search-profiles",
             "scrape": "/api/scrape-profiles",
             "perspective": "/api/generate-perspective",
+            "generate": "/api/generate",
             "health": "/health",
             "docs": "/docs"
         }
@@ -325,7 +340,7 @@ async def scrape_profiles(request: ScrapeRequest):
     if request.user_id:
         try:
             twitter_scraper = TwitterScraper(debug=False)
-            tweets = twitter_scraper.get_user_posts_by_id(request.user_id, max_results=10)
+            tweets = twitter_scraper.get_user_posts_by_id(request.user_id, max_results=5)
             
             if tweets:
                 # Create data directory if it doesn't exist
@@ -603,6 +618,179 @@ async def generate_perspective(request: PerspectiveRequest):
         raise HTTPException(
             status_code=500,
             detail=f"An error occurred while generating perspective: {str(e)}"
+        )
+
+
+@app.post("/api/generate", response_model=GenerateResponse)
+async def generate_images(request: GenerateRequest):
+    """
+    Generate images based on Instagram summary and saved profile image
+    
+    Args:
+        request: GenerateRequest containing name and optional number_of_images
+        
+    Returns:
+        GenerateResponse with generated image filenames
+    """
+    try:
+        if not request.name or not request.name.strip():
+            raise HTTPException(status_code=400, detail="Name cannot be empty")
+        
+        # Get paths
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        data_dir = os.path.join(script_dir, "data")
+        frontend_dir = os.path.dirname(script_dir)  # Go up one level from backend
+        frontend_public_dir = os.path.join(frontend_dir, "frontend", "public")
+        
+        # Create safe name for file lookup
+        safe_name = re.sub(r'[^a-zA-Z0-9_]', '_', request.name.strip())
+        
+        # Load profile state
+        profile_state = ProfileState.load_from_file(safe_name, data_dir)
+        if not profile_state:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Profile state not found for {request.name}. Please search and scrape first."
+            )
+        
+        # Check if Instagram analysis exists
+        if not profile_state.instagram_analysis or not profile_state.instagram_analysis.get('summary'):
+            raise HTTPException(
+                status_code=404,
+                detail="Instagram analysis not found. Please scrape Instagram photos first."
+            )
+        
+        # Check if profile image exists
+        if not profile_state.image or not profile_state.image.get('filename'):
+            raise HTTPException(
+                status_code=404,
+                detail="Profile image not found. Please search profiles first."
+            )
+        
+        # Get Instagram summary
+        instagram_summary = profile_state.instagram_analysis['summary']
+        person_name = profile_state.name
+        image_filename = profile_state.image['filename']
+        
+        # Convert image filename to absolute path
+        # Image filename is relative to frontend/public, e.g., "carl_pei.jpg"
+        image_path = os.path.join(frontend_public_dir, image_filename)
+        
+        if not os.path.exists(image_path):
+            raise HTTPException(
+                status_code=404,
+                detail=f"Profile image file not found: {image_filename}"
+            )
+        
+        print(f"[API] Generating images for {person_name}...", file=sys.stderr, flush=True)
+        print(f"[API] Using Instagram summary: {instagram_summary[:100]}...", file=sys.stderr, flush=True)
+        print(f"[API] Using base image: {image_path}", file=sys.stderr, flush=True)
+        
+        # Step 1: Create multiple different image prompts from Instagram summary
+        prompt_summarizer = PromptSummarizer(debug=True)
+        number_of_images = request.number_of_images or 3
+        
+        image_prompts = prompt_summarizer.create_multiple_image_prompts(
+            character_summary=instagram_summary,
+            person_name=person_name,
+            num_prompts=number_of_images
+        )
+        
+        if not image_prompts or len(image_prompts) < number_of_images:
+            raise HTTPException(
+                status_code=500,
+                detail=f"Failed to generate {number_of_images} image prompts from Instagram summary"
+            )
+        
+        print(f"[API] Generated {len(image_prompts)} different prompts:", file=sys.stderr, flush=True)
+        for i, prompt in enumerate(image_prompts, 1):
+            print(f"[API] Prompt {i}: {prompt}", file=sys.stderr, flush=True)
+        
+        # Step 2: Generate images using ImageGenerator - one image per prompt
+        image_generator = ImageGenerator(debug=True)
+        generated_filenames = []
+        all_prompts_used = []
+        
+        for i, image_prompt in enumerate(image_prompts[:number_of_images], 1):
+            try:
+                print(f"[API] Generating image {i}/{number_of_images} with unique prompt...", file=sys.stderr, flush=True)
+                
+                # Generate one image per prompt for variety
+                generation_result = image_generator.generate_image(
+                    prompt=image_prompt,
+                    subject_reference=image_path,
+                    aspect_ratio="3:4",
+                    number_of_images=1,  # Generate one image per prompt
+                    prompt_optimizer=True
+                )
+                
+                if not generation_result or not generation_result.get('image_urls'):
+                    print(f"[API] Warning: Failed to generate image {i}", file=sys.stderr, flush=True)
+                    continue
+                
+                # Step 3: Download and save generated image to frontend/public
+                image_url = generation_result['image_urls'][0]  # Get the first (and only) image
+                
+                try:
+                    # Create filename based on person name and index
+                    file_extension = "png"  # Default extension
+                    if "." in image_url:
+                        # Try to get extension from URL
+                        url_ext = image_url.split(".")[-1].split("?")[0].lower()
+                        if url_ext in ["jpg", "jpeg", "png", "webp"]:
+                            file_extension = url_ext
+                    
+                    generated_filename = f"{safe_name}_generated_{i}.{file_extension}"
+                    output_path = os.path.join(frontend_public_dir, generated_filename)
+                    
+                    # Download and save image
+                    success = image_generator.save_image(image_url, output_path)
+                    
+                    if success:
+                        generated_filenames.append(generated_filename)
+                        all_prompts_used.append(image_prompt)
+                        print(f"[API] Saved generated image {i}: {generated_filename}", file=sys.stderr, flush=True)
+                    else:
+                        print(f"[API] Warning: Failed to save image {i}", file=sys.stderr, flush=True)
+                        
+                except Exception as e:
+                    print(f"[API] Error saving image {i}: {e}", file=sys.stderr, flush=True)
+                    import traceback
+                    traceback.print_exc(file=sys.stderr)
+                    
+            except Exception as e:
+                print(f"[API] Error generating image {i}: {e}", file=sys.stderr, flush=True)
+                import traceback
+                traceback.print_exc(file=sys.stderr)
+                continue
+        
+        # All images generated with unique prompts
+        
+        if not generated_filenames:
+            raise HTTPException(
+                status_code=500,
+                detail="Failed to save any generated images"
+            )
+        
+        # Combine all prompts into a single string for the response
+        combined_prompts = "\n\n".join([f"Prompt {i+1}: {p}" for i, p in enumerate(all_prompts_used)])
+        
+        return GenerateResponse(
+            success=True,
+            message=f"Successfully generated {len(generated_filenames)} unique image(s)",
+            prompt=combined_prompts,
+            generated_images=generated_filenames
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"[API] Error in generate endpoint: {e}", file=sys.stderr, flush=True)
+        import traceback
+        traceback.print_exc(file=sys.stderr)
+        raise HTTPException(
+            status_code=500,
+            detail=f"An error occurred while generating images: {str(e)}"
         )
 
 
