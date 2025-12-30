@@ -8,12 +8,12 @@ from api.linkedin import LinkedInScraper
 from api.instagram import InstagramScraper
 from api.image import ImageSearcher
 from api.articles import ArticleSearcher
-from src.categorise import TextLabeler
-from src.create_embeddings import EmbeddingStore, load_labeled_json
-from src.perspective import PerspectiveGenerator
-from src.instagram_analyzer import InstagramImageAnalyzer
-from src.prompt_summarise import PromptSummarizer
-from src.generator import ImageGenerator
+from ai.categorise import TextLabeler
+from ai.create_embeddings import EmbeddingStore, load_labeled_json
+from ai.perspective import PerspectiveGenerator
+from ai.instagram_analyzer import InstagramImageAnalyzer
+from ai.prompt_summarise import PromptSummarizer
+from ai.generator import ImageGenerator
 from models.profile_state import ProfileState
 import os
 import re
