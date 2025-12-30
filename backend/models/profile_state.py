@@ -26,6 +26,9 @@ class ProfileState(BaseModel):
     twitter_posts: Optional[List[Dict]] = None
     instagram_photos: Optional[List[Dict]] = None
     
+    # Processed/analyzed content
+    instagram_analysis: Optional[Dict] = None  # { summary, individual_analyses, total_photos_analyzed }
+    
     # Metadata
     search_completed: bool = False
     scrape_completed: bool = False
@@ -119,4 +122,8 @@ class ProfileState(BaseModel):
         if instagram_photos is not None:
             self.instagram_photos = instagram_photos
         self.scrape_completed = True
+    
+    def update_instagram_analysis(self, analysis: Dict):
+        """Update Instagram photo analysis in state"""
+        self.instagram_analysis = analysis
 

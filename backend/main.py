@@ -11,6 +11,7 @@ from api.articles import ArticleSearcher
 from src.categorise import TextLabeler
 from src.create_embeddings import EmbeddingStore, load_labeled_json
 from src.perspective import PerspectiveGenerator
+from src.instagram_analyzer import InstagramImageAnalyzer
 from models.profile_state import ProfileState
 import os
 import re
@@ -165,14 +166,7 @@ async def search_profiles(request: SearchRequest):
             articles = None
         
         # Log results for debugging - use stderr to ensure it shows
-        print(f"\n{'='*60}", file=sys.stderr, flush=True)
-        print(f"[API] Search results for {request.name}:", file=sys.stderr, flush=True)
-        print(f"  LinkedIn: {results.get('linkedin')}", file=sys.stderr, flush=True)
-        print(f"  Twitter: {results.get('twitter')}", file=sys.stderr, flush=True)
-        print(f"  Instagram: {results.get('instagram')}", file=sys.stderr, flush=True)
-        print(f"  Image: {image_result.get('filename') if image_result else 'None'}", file=sys.stderr, flush=True)
-        print(f"  Articles: {len(articles) if articles else 0} found", file=sys.stderr, flush=True)
-        print(f"{'='*60}\n", file=sys.stderr, flush=True)
+        
         
         # Save to centralized state object
         try:
@@ -435,6 +429,30 @@ async def scrape_profiles(request: ScrapeRequest):
                 
                 # Update profile state with scraped Instagram photos
                 profile_state.update_scraped_content(instagram_photos=photos)
+                
+                # Analyze Instagram photos using InstagramImageAnalyzer
+                try:
+                    print(f"[API] Starting Instagram photo analysis...", file=sys.stderr, flush=True)
+                    analyzer = InstagramImageAnalyzer(debug=True)
+                    
+                    # Analyze the photos directly (they're already in the right format from scraper)
+                    # The photos list from InstagramScraper has: url, image_url, caption, timestamp, etc.
+                    analysis_result = analyzer.analyze_profile_photos(photos, max_photos=20)
+                    
+                    # Update profile state with analysis
+                    profile_state.update_instagram_analysis(analysis_result)
+                    
+                    print(f"[API] Instagram analysis completed: {analysis_result.get('total_photos_analyzed', 0)} photos analyzed", file=sys.stderr, flush=True)
+                    if analysis_result.get('summary'):
+                        summary_preview = analysis_result['summary'][:200] if len(analysis_result['summary']) > 200 else analysis_result['summary']
+                        print(f"[API] Summary preview: {summary_preview}...", file=sys.stderr, flush=True)
+                    
+                except Exception as e:
+                    print(f"[API] Warning: Instagram photo analysis failed: {e}", file=sys.stderr, flush=True)
+                    import traceback
+                    traceback.print_exc(file=sys.stderr)
+                    # Don't fail the whole request if analysis fails
+                    errors.append(f"Instagram analysis error: {str(e)}")
             else:
                 errors.append("No Instagram photos found")
                 
