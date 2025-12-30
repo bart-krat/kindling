@@ -74,7 +74,8 @@ class PerspectiveGenerator:
             print(f"  ✓ Vector store loaded with {self.store.index.ntotal} vectors")
     
     def search_and_generate_perspective(self, query: str, top_k: int = 5, 
-                                       max_context_length: int = 2000) -> Dict:
+                                       max_context_length: int = 2000,
+                                       persona_prompt: Optional[str] = None) -> Dict:
         """
         Search vector store and generate a perspective based on retrieved context
         
@@ -82,6 +83,7 @@ class PerspectiveGenerator:
             query: User's question or query
             top_k: Number of relevant documents to retrieve
             max_context_length: Maximum characters of context to include
+            persona_prompt: Optional persona prompt to prepend to system message (e.g., "You're a creative entrepreneur...")
             
         Returns:
             Dictionary with 'perspective', 'sources', and 'query'
@@ -164,12 +166,21 @@ Instructions:
 Provide your perspective:"""
         
         try:
+            # Build system message with optional persona prompt
+            system_message = "You are a thoughtful analyst who synthesizes information from multiple sources to provide insightful perspectives on questions about the world, industry, and technology."
+            
+            if persona_prompt:
+                # Prepend persona prompt as the first sentence
+                system_message = f"{persona_prompt} {system_message}"
+                if self.debug:
+                    print(f"  Using persona prompt: {persona_prompt}")
+            
             response = self.client.chat.completions.create(
                 model=self.llm_model,
                 messages=[
                     {
                         "role": "system",
-                        "content": "You are a thoughtful analyst who synthesizes information from multiple sources to provide insightful perspectives on questions about the world, industry, and technology."
+                        "content": system_message
                     },
                     {
                         "role": "user",

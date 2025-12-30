@@ -250,7 +250,7 @@
         "like_count": 420,
         "quote_count": 0,
         "bookmark_count": 404,
-        "impression_count": 86449
+        "impression_count": 86496
       }
     },
     {
@@ -266,7 +266,7 @@
         "like_count": 317,
         "quote_count": 3,
         "bookmark_count": 10,
-        "impression_count": 46701
+        "impression_count": 46709
       }
     },
     {
@@ -298,7 +298,7 @@
         "like_count": 399,
         "quote_count": 2,
         "bookmark_count": 7,
-        "impression_count": 22659
+        "impression_count": 22682
       }
     },
     {
@@ -311,10 +311,10 @@
       "metrics": {
         "retweet_count": 11,
         "reply_count": 7,
-        "like_count": 372,
+        "like_count": 373,
         "quote_count": 0,
         "bookmark_count": 12,
-        "impression_count": 25488
+        "impression_count": 25503
       }
     }
   ],
@@ -646,6 +646,7 @@
     "summary": "**Comprehensive Profile Summary:**\n\n1. **Overall Personality Traits and Interests:**\n   - This individual appears to be a well-rounded blend of creativity and professionalism, characterized by their appreciation for technology, innovation, and exploration. They display a strong affinity for modern aesthetics, strategic thinking, and a cosmopolitan lifestyle. Their involvement in tech-related activities and entrepreneurial ventures suggests a forward-thinking and progressive personality.\n   - Interests span across technology, travel, architecture, nightlife, and content creation. This suggests a curious and adventurous nature, with a penchant for both intellectual and experiential pursuits.\n\n2. **Lifestyle and Activities:**\n   - The lifestyle of this individual is dynamic and diverse, involving both professional and recreational activities. They are frequently engaged in technology-centric environments, whether through entrepreneurial endeavors, public speaking, or product launches. Their interest in social currents is evident from their attendance at music festivals and the vibrant nightlife scenes.\n   - There is a noticeable emphasis on travel and exploration, particularly in iconic cultural and historic settings, suggesting a preference for experiences that enrich their cultural understanding and provide inspiration.\n\n3. **Values and Priorities (if evident):**\n   - This individual's values revolve around innovation, creativity, collaboration, and achievement. The frequent depictions of significant professional milestones and celebratory moments indicate a strong focus on growth, both personally and professionally.\n   - There is a recurring theme of appreciation for storytelling and memorable experiences, as seen from their engagement with visual narratives and unique experiences like camel rides in a desert landscape.\n\n4. **Professional or Creative Pursuits:**\n   - Professionally, the individual is heavily embedded in the technology sector, possibly occupying a leadership role in a tech company as evidenced by their interaction with industry awards and speaking engagements.\n   - Their creative pursuits may involve content creation, as suggested by the YouTube Gold Play Button award, pointing to success in digital storytelling or media.\n   - The engagement in strategic discussions and large-scale business achievements implies a robust professional network and influence in their field.\n\n5. **Social Patterns or Themes:**\n   - The photos suggest a balance between professional commitments and social engagements. The presence of groups and the celebration of achievements highlight the importance of teamwork and collaboration in their life.\n   - Social themes depict an individual who enjoys vibrant and communal environments, whether in bustling urban settings, festive activities, or relaxed moments with colleagues, emphasizing a sociable and inclusive nature.\n\n6. **Notable Characteristics or Patterns Across the Photos:**\n   - A consistent theme across",
     "total_photos_analyzed": 20
   },
+  "text_prompt": "You're a dynamic tech entrepreneur and content creator with a passion for innovation, travel, and vibrant social experiences.",
   "search_completed": true,
   "scrape_completed": true
 }

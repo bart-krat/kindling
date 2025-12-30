@@ -233,6 +233,87 @@ Generate {num_prompts} distinct prompts, each starting with "Make an image of {p
                 import traceback
                 traceback.print_exc()
             return None
+    
+    def text_prompt(self, character_summary: str, person_name: Optional[str] = None) -> Optional[str]:
+        """
+        Convert a character summary into a single-sentence persona prompt for LLM
+        
+        Args:
+            character_summary: Text summary describing the person's personality, interests, lifestyle, etc.
+            person_name: Optional name of the person (if provided, will be used in the prompt)
+            
+        Returns:
+            Single-sentence persona prompt string, or None on error
+        """
+        if not character_summary or not character_summary.strip():
+            if self.debug:
+                print("  ✗ Empty character summary provided")
+            return None
+        
+        # Build the prompt for OpenAI
+        system_prompt = """You are a prompt engineer for LLM persona creation. Your task is to convert character summaries into a concise, single-sentence persona prompt that describes who the person is.
+
+The prompt should:
+1. Start with "You're" or "You are"
+2. Be exactly ONE sentence
+3. Capture the person's key characteristics, profession, interests, or personality traits
+4. Be natural and conversational
+5. Be suitable for giving an LLM a persona to adopt
+
+Example format:
+"You're a creative entrepreneur who loves hardware and building innovative technology products."
+"""
+        
+        user_prompt = f"""Convert the following character summary into a single-sentence persona prompt:
+
+Character Summary:
+{character_summary.strip()}
+
+{f"Person's name: {person_name}" if person_name else ""}
+
+Generate a single sentence that starts with "You're" or "You are" and describes this person's persona based on the summary. It must be exactly one sentence."""
+        
+        try:
+            if self.debug:
+                print(f"  Creating text persona prompt from character summary...")
+            
+            response = self.client.chat.completions.create(
+                model=self.model,
+                messages=[
+                    {
+                        "role": "system",
+                        "content": system_prompt
+                    },
+                    {
+                        "role": "user",
+                        "content": user_prompt
+                    }
+                ],
+                temperature=0.7,
+                max_tokens=100
+            )
+            
+            prompt = response.choices[0].message.content.strip()
+            
+            # Ensure it's a single sentence - remove any extra sentences
+            # Split by sentence-ending punctuation
+            import re
+            sentences = re.split(r'[.!?]+', prompt)
+            if sentences:
+                # Take the first sentence and add proper ending if needed
+                prompt = sentences[0].strip()
+                if prompt and not prompt[-1] in '.!?':
+                    prompt += '.'
+            
+            if self.debug:
+                print(f"  ✓ Generated text prompt: {prompt}")
+            
+            return prompt
+            
+        except Exception as e:
+            if self.debug:
+                print(f"  ✗ Error creating text prompt: {e}")
+            return None
 
 
 if __name__ == "__main__":
@@ -242,6 +323,7 @@ if __name__ == "__main__":
     example_summary = """Innovative tech entrepreneur, adventurous traveler, cultural enthusiast, 
     social and outgoing, values innovation and collaboration"""
     
+    # Test image prompt
     prompt = summarizer.create_image_prompt(example_summary, person_name="Carl Pei")
     
     if prompt:
@@ -249,5 +331,15 @@ if __name__ == "__main__":
         print("Generated Image Prompt:")
         print("=" * 60)
         print(prompt)
+        print("=" * 60)
+    
+    # Test text prompt
+    text_prompt = summarizer.text_prompt(example_summary, person_name="Carl Pei")
+    
+    if text_prompt:
+        print("\n" + "=" * 60)
+        print("Generated Text Persona Prompt:")
+        print("=" * 60)
+        print(text_prompt)
         print("=" * 60)
 

@@ -28,6 +28,7 @@ class ProfileState(BaseModel):
     
     # Processed/analyzed content
     instagram_analysis: Optional[Dict] = None  # { summary, individual_analyses, total_photos_analyzed }
+    text_prompt: Optional[str] = None  # Persona prompt for LLM (e.g., "You're a creative entrepreneur...")
     
     # Metadata
     search_completed: bool = False
@@ -126,4 +127,8 @@ class ProfileState(BaseModel):
     def update_instagram_analysis(self, analysis: Dict):
         """Update Instagram photo analysis in state"""
         self.instagram_analysis = analysis
+    
+    def update_text_prompt(self, text_prompt: str):
+        """Update text persona prompt in state"""
+        self.text_prompt = text_prompt
 

@@ -594,16 +594,35 @@ async def generate_perspective(request: PerspectiveRequest):
                 detail="Vector store not found. Please scrape and categorize posts first."
             )
         
+        # Try to load profile state to get text persona prompt
+        # We'll try to find the most recent state file
+        text_persona_prompt = None
+        try:
+            import glob
+            state_files = glob.glob(os.path.join(data_dir, "profile_state_*.json"))
+            if state_files:
+                # Use the most recently modified state file
+                latest_state_file = max(state_files, key=os.path.getmtime)
+                # Extract name from filename
+                state_name = os.path.basename(latest_state_file).replace("profile_state_", "").replace(".json", "")
+                profile_state = ProfileState.load_from_file(state_name, data_dir)
+                if profile_state and profile_state.text_prompt:
+                    text_persona_prompt = profile_state.text_prompt
+                    print(f"[API] Using text persona prompt from state: {text_persona_prompt[:50]}...", file=sys.stderr, flush=True)
+        except Exception as e:
+            print(f"[API] Warning: Could not load text persona prompt from state: {e}", file=sys.stderr, flush=True)
+        
         # Initialize perspective generator
         generator = PerspectiveGenerator(debug=False)
         
         # Load vector store
         generator.load_vector_store(index_path, metadata_path)
         
-        # Generate perspective
+        # Generate perspective with optional persona prompt
         result = generator.search_and_generate_perspective(
             query=request.query.strip(),
-            top_k=request.top_k
+            top_k=request.top_k,
+            persona_prompt=text_persona_prompt
         )
         
         return PerspectiveResponse(
@@ -686,8 +705,24 @@ async def generate_images(request: GenerateRequest):
         print(f"[API] Using Instagram summary: {instagram_summary[:100]}...", file=sys.stderr, flush=True)
         print(f"[API] Using base image: {image_path}", file=sys.stderr, flush=True)
         
-        # Step 1: Create multiple different image prompts from Instagram summary
+        # Step 1: Create text persona prompt and save to state
         prompt_summarizer = PromptSummarizer(debug=True)
+        
+        # Generate text persona prompt for LLM
+        text_persona_prompt = prompt_summarizer.text_prompt(
+            character_summary=instagram_summary,
+            person_name=person_name
+        )
+        
+        if text_persona_prompt:
+            profile_state.update_text_prompt(text_persona_prompt)
+            print(f"[API] Generated text persona prompt: {text_persona_prompt}", file=sys.stderr, flush=True)
+            # Save state with text prompt
+            profile_state.save_to_file(data_dir)
+        else:
+            print(f"[API] Warning: Failed to generate text persona prompt", file=sys.stderr, flush=True)
+        
+        # Step 2: Create multiple different image prompts from Instagram summary
         number_of_images = request.number_of_images or 3
         
         image_prompts = prompt_summarizer.create_multiple_image_prompts(
@@ -706,7 +741,7 @@ async def generate_images(request: GenerateRequest):
         for i, prompt in enumerate(image_prompts, 1):
             print(f"[API] Prompt {i}: {prompt}", file=sys.stderr, flush=True)
         
-        # Step 2: Generate images using ImageGenerator - one image per prompt
+        # Step 3: Generate images using ImageGenerator - one image per prompt
         image_generator = ImageGenerator(debug=True)
         generated_filenames = []
         all_prompts_used = []
@@ -728,7 +763,7 @@ async def generate_images(request: GenerateRequest):
                     print(f"[API] Warning: Failed to generate image {i}", file=sys.stderr, flush=True)
                     continue
                 
-                # Step 3: Download and save generated image to frontend/public
+                # Step 4: Download and save generated image to frontend/public
                 image_url = generation_result['image_urls'][0]  # Get the first (and only) image
                 
                 try:
